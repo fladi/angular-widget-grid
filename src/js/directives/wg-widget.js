@@ -8,7 +8,10 @@
   angular.module('widgetGrid').directive('wgWidget', ['Widget', function (Widget) {
     return {
       scope: {
-        position: '=',
+        top: '=',
+        left: '=',
+        width: '=',
+        height: '=',
         editable: '@?'
       },
       restrict: 'AE',
@@ -18,7 +21,12 @@
       templateUrl: 'wg-widget',
       replace: true,
       link: function (scope, element, attrs, gridCtrl) {
-        var widgetOptions = scope.position;
+        var widgetOptions = {
+            top: scope.top,
+            left: scope.left,
+            width: scope.width,
+            height: scope.height
+        };
         var widget = new Widget(widgetOptions);
         
         scope.editable = 'false';
@@ -32,7 +40,11 @@
         
         scope.setWidgetPosition = function (position) {
           widget.setPosition(position);
-          scope.position = widget.getPosition();
+          var newposition  = widget.getPosition();
+          scope.top = newposition.top;
+          scope.left = newposition.left;
+          scope.width = newposition.width;
+          scope.height = newposition.height;
           gridCtrl.updateWidget(widget);
           element.css(gridCtrl.getWidgetStyle(widget));
         };
